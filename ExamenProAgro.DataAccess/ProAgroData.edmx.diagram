@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b8b1ea606df64909b732f4f1b11d0204" Name="Diagram1">
+        <EntityTypeShape EntityType="ExamenRelutamientoProAgroModel.CAT_ESTADO" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamenRelutamientoProAgroModel.CAT_GEORREFERENCIAS" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamenRelutamientoProAgroModel.CAT_USUARIO" Width="1.5" PointX="0.75" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExamenRelutamientoProAgroModel.CAT_USUARIO_ESTADO" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="ExamenRelutamientoProAgroModel.FK_CAT_GEORREFERENCIAS_CAT_ESTADO" ManuallyRouted="false" />
+        <AssociationConnector Association="ExamenRelutamientoProAgroModel.FK_CAT_USUARIO_ESTADO_CAT_ESTADO" ManuallyRouted="false" />
+        <AssociationConnector Association="ExamenRelutamientoProAgroModel.FK_CAT_USUARIO_ESTADO_CAT_USUARIO" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,179 @@
+﻿@{
+    ViewBag.Title = "Configuración";
+}
+
+<html>
+<head>
+    <title>Configuración</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link href="~/Content/common/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/common/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/common/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Modal1").click(function () {
+                $(".MyModalUpdateUser").modal('show');
+            });
+            $("#Modal2").click(function () {
+                $(".MyModalDeleteUser").modal('show');
+            });
+            
+            var combosProAgro = [];
+            var usersProAgro = [];
+
+            var combos = {
+                "url": "http://localhost:58128/api/proagro/obtenerestados",
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+            };
+            var users = {
+                "url": "http://localhost:58128/api/proagro/obtenerusuarios",
+                "method": "GET",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+            };
+
+            $.ajax(combos).done(function (responseCombos) {
+                $(responseCombos.data).each(function () {
+                    combosProAgro = responseCombos.data;
+
+                    cargaUsuarios();
+
+                });
+            });
+
+            function cargaUsuarios() {
+                $.ajax(users).done(function (responseUsers) {
+                    $("#tblUserAjax").empty();
+                    usersProAgro = responseUsers.data;
+
+                    $.each(usersProAgro, function (i, item) {
+                        $("#tblUserAjax").append('<tr><td class="idUsuario"><input type="hidden" id="idUsuario"' + i + '"class="idUsuarioHidden" value="' + item.idUsuario + '" />' +
+                            '</td><td><input type="hidden" class="txtNombre" value="' + item.Nombre + '"/></td><td>' + 
+                            '</td><td>' + item.Nombre + '</td><td>' +
+                            '</td><td><input type="hidden" class="txtContraseña" value="' + item.Contraseña + '"/></td><td>' +
+                            '</td><td>' + item.Contraseña + '</td><td>' +
+                            '</td><td><input type="hidden" class="fechaCreacion" value="' + item.FechaCreacion + '"/></td><td>' +
+                            '</td><td>' + item.FechaCreacion + '</td><td>' +
+                            '</td><td><input type="hidden" class="txtRFC" value="' + item.RFC + '"/></td><td>' +
+                            '</td><td>' + item.RFC + '</td><td>' +
+                            //'</td><td><select id="comboProAgro' + i + '" class="form-control csHiddenCombo" style="width:110px;"><option value="" disabled>--- Seleccione --- </option></select>' +
+                            '</td><td><button type="button" class="btn btn-success" onclick="editUser(' + item.idUsuario + ',\''+ item.Nombre + '\',\'' + item.Contraseña + '\' ' + ',\'' + item.FechaCreacion + '\' ' + ',\'' + item.RFC + '\')"><i class="bi bi-trash"></i></button> '+
+                            '</td><td><button type="button" class="btn btn-danger" onclick="deleteUser(' + item.idUsuario + ',\''  + item.Nombre  +'\')"><i class="bi bi-pencil-square"></i></button>');
+                    });
+
+                    $.each(combosProAgro, function (j, jtem) {
+                        $("#comboProAgro" + i).append('<option value="' + jtem.idEstado + '" > ' + jtem.NombreEstado + '</option>');
+                    });
+                    $("#comboProAgro" + i).val(item.idEstado);
+                });
+            }
+        });
+
+        function deleteUser(idUsuario, Nombre) {
+            $(".usuarioid").val(idUsuario);
+            $(".Nombretxt").val(Nombre);
+            $(".MyModalDeleteUser").modal('show');
+            $(".usuarioid").prop("disabled", true);
+        }
+
+        function editUser(idUsuario, Nombre, Contraseña, FechaCreacion, RFC) {
+            $(".usuarioidUpd").val(idUsuario);
+            $(".txtNombreUpd").val(Nombre);
+            $(".txtPassUpd").val(Contraseña);
+            $(".FechaUpd").val(FechaCreacion);
+            $(".txtRFCUpd").val(RFC);
+            $(".MyModalUpdateUser").modal('show');
+
+        }
+    </script>
+</head>
+    <body>
+        <div class="container pb-4">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <button class="navbar-toggler" data-target="#menu" data-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="menu">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a href="/Georreferencia/Georreferencia" class="nav-link">Georreferencia</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="/Configuracion/Configuracion" class="nav-link">Configuración usuarios</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div id="tblUser">
+            <div>
+                <table class="table">
+                    <tr>
+                        <td style="width: 45%;">Nombre</td>
+                        <td style="width: 13%;"></td>
+                        <td style="width: 10%;">Contraseña</td>
+                        <td style="width: 15%;">Fecha Creación</td>
+                        <td>RFC</td>
+                    </tr>
+                </table>
+                <table id="tblUserAjax" class="table tblUserAjax">
+                    <tr>
+                        <td>Usuarios</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <!--MODAL SECTION-->
+        <div class="modal fade MyModalUpdateUser" id="MyModalUpdateUser" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Actualizar Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" class="usuarioidUpd" value="usuarioidUpd" />
+                        <span>Usuario: <input type="text" class="form-control txtNombreUpd" name="txtNombreUpd" value="txtNombreUpd" /></span>
+                        <span>Contraseña: <input type="text" class="form-control txtPassUpd" name="txtPassUpd" value="txtPassUpd" /></span>
+                        <span>Fecha Creación: <input type="datetime" class="form-control FechaUpd" name="FechaUpd" value="FechaUpd" /></span>
+                        <span>RFC: <input type="text" class="form-control txtRFCUpd" name="txtRFCUpd" value="txtRFCUpd" /></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success UpdateUser" data-bs-toggle="modal" data-bs-dismiss="modal">Actualizar</button>
+                        <button class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade MyModalDeleteUser" id="MyModalDeleteUser" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Borrar Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de eliminar al usuario?
+                        <input type="hidden" class="usuarioid" value="usuarioid" />
+                        <p><input type="text" class="Nombretxt" value="Nombretxt" style="width:100%; border:0;"/></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger DeleteUser" data-bs-toggle="modal" data-bs-dismiss="modal">Delete</button>
+                        <button class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
